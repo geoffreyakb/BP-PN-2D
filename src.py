@@ -518,21 +518,19 @@ def KEPLER(r_vtk):
 def EINSTEIN(r_vtk):
     return np.sqrt(1/r_vtk**3 + 6/r_vtk**4)
 
-def THEORETICAL_ROTATION_CURVE(R, Tilt_init, spin, gravity, r_vtk):
-    tilt = Tilt_init * np.pi / 180
-
-    a = R
-    b = 2 * np.cos(tilt) * spin / R**2
+def THEORETICAL_ROTATION_CURVE(r_vtk, spin, gravity):
+    a = r_vtk
+    b = 2 * spin / r_vtk**2
     if gravity == "Kepler":
-        c = - 1/R**2
+        c = - 1/r_vtk**2
     elif gravity == "Einstein":
-        c = - 1/R**2 - 6/R**3
+        c = - 1/r_vtk**2 - 6/r_vtk**3
 
     delta = b**2 - 4*a*c
     omega_th_p = (-b + np.sqrt(delta)) / (2*a)
     omega_th_m = (-b - np.sqrt(delta)) / (2*a)
     
-    kappa_2_th_p = 4*omega_th_p**2 + 2*R*omega_th_p*np.gradient(omega_th_p, r_vtk)
-    kappa_2_th_m = 4*omega_th_m**2 + 2*R*omega_th_m*np.gradient(omega_th_m, r_vtk)
+    kappa_2_th_p = 4*omega_th_p**2 + 2*r_vtk*omega_th_p*np.gradient(omega_th_p, r_vtk)
+    kappa_2_th_m = 4*omega_th_m**2 + 2*r_vtk*omega_th_m*np.gradient(omega_th_m, r_vtk)
 
     return omega_th_p, omega_th_m, kappa_2_th_p, kappa_2_th_m
